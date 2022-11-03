@@ -11,7 +11,7 @@ contributions:
   readers:
     - command: napari-sif-reader.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy']
+      filename_patterns: ['*.sif']
   sample_data:
     - command: napari-sif-reader.make_sample_data
       display_name: napari sif file reader
