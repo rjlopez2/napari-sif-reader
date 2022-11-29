@@ -35,6 +35,40 @@ def napari_get_reader(path):
     # otherwise we return the *function* that can read ``path``.
     return reader_function
 
+def get_custome_metadata_func(info_sif_reader):
+    metadata_key_names = ['SifVersion',
+                                'ExperimentTime',
+                                'DetectorTemperature',
+                                'ExposureTime',
+                                'CycleTime',
+                                'AccumulatedCycleTime',
+                                'AccumulatedCycles',
+                                'StackCycleTime',
+                                'PixelReadoutTime',
+                                'GainDAC',
+                                'DetectorType',
+                                'DetectorDimensions',
+                                'OriginalFilename',
+                                'ShutterTime',
+                                'spectrograph',
+                                'SifCalbVersion',
+                                'Calibration_data',
+                                'FrameAxis',
+                                'DataType',
+                                'ImageAxis',
+                                'NumberOfFrames',
+                                'NumberOfSubImages',
+                                'TotalLength',
+                                'ImageLength',
+                                'xbin',
+                                'ybin']
+    metadata_dict_output = {}
+    
+    
+    for key in range(len(metadata_key_names)):
+        metadata_dict_output[metadata_key_names[key]] = info_sif_reader.get(metadata_key_names[key])
+        
+    return metadata_dict_output
 
 def reader_function(path):
     """Take a path or list of paths and return a list of LayerData tuples.
@@ -64,13 +98,19 @@ def reader_function(path):
     # arrays = [np.load(_path) for _path in paths]
     # stack arrays into single array
     data, info = sif_parser.np_open(path)
+    metadata = get_custome_metadata_func(info)
+
+    
+    #################### note: update this to only get usefulll 
+    ########## and not redudndant metadata info
+
     # meta = dict(info)
 
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {
         "colormap" : "twilight_shifted",
         "gamma" : 0.15,
-        "metadata": dict(info)
+        "metadata": metadata
     }
 
     layer_type = "image"  # optional, default is "image"
