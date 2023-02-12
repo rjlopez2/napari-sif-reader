@@ -100,6 +100,9 @@ def reader_function(path):
     data, info = sif_parser.np_open(path)
     metadata = get_custome_metadata_func(info)
 
+    # skip first two frames to avoid peak artifact on first frame?
+    data = data[2:,...]
+
     
     #################### note: update this to only get usefulll 
     ########## and not redudndant metadata info
