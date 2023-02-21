@@ -8,6 +8,7 @@ https://napari.org/stable/plugins/guides.html?#readers
 import sif_parser
 import numpy as np
 
+SUPPORTED_IMAGES = ".sif", ".sif"
 
 def napari_get_reader(path):
     """A basic implementation of a Reader contribution.
@@ -30,7 +31,7 @@ def napari_get_reader(path):
         path = path[0]
 
     # if we know we cannot read the file, we immediately return None.
-    if not path.endswith(".sif"):
+    if not path.endswith(SUPPORTED_IMAGES):
         return None
 
     # otherwise we return the *function* that can read ``path``.
