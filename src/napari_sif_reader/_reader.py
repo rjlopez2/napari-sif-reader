@@ -6,6 +6,7 @@ implement multiple readers or even other plugin contributions. see:
 https://napari.org/stable/plugins/guides.html?#readers
 """
 import sif_parser
+import numpy as np
 
 
 def napari_get_reader(path):
@@ -98,6 +99,8 @@ def reader_function(path):
     # arrays = [np.load(_path) for _path in paths]
     # stack arrays into single array
     data, info = sif_parser.np_open(path)
+    # reorder array so it's the same order dimention represented as in the matlab app
+    data = np.flip(data, axis=(1))
     metadata = get_custome_metadata_func(info)
 
     # skip first two frames to avoid peak artifact on first frame?
