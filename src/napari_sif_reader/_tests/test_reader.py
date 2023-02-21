@@ -2,17 +2,29 @@ import numpy as np
 
 from napari_sif_reader import napari_get_reader
 
-import pytest
+# import pytest
 # from napari_sif_reader import _reader
 # from napari_sif_reader import get_image_reader
 from napari_sif_reader import _reader
 # from skimage.io import imsave
 
-@pytest.mark.parametrize("ext", _reader.SUPPORTED_IMAGES)
-def test_get_image_reader(ext):
-    path = f"fake_path/img{ext}"
-    assert _reader.napari_get_reader(path) is not None
-    assert _reader.napari_get_reader([path]) is not None
+# @pytest.mark.parametrize("ext", _reader.SUPPORTED_IMAGES)
+# def test_get_image_reader(ext):
+#     path = f"fake_path/img{ext}"
+#     assert _reader.napari_get_reader(path) is not None
+#     assert _reader.napari_get_reader([path]) is not None
+
+
+def test_get_img_reader(tmp_path):
+
+    path = str(tmp_path / "myfile.sif")
+    
+    assert napari_get_reader(path) is not None
+    assert napari_get_reader([path]) is not None
+
+
+
+
 # tmp_path is a pytest fixture
 # def test_reader(tmp_path):
 #     """An example of how you might test your plugin."""
