@@ -114,8 +114,8 @@ def reader_function(path):
 
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {
-        "colormap" : "twilight_shifted",
-        "gamma" : 0.15,
+        "colormap" : "turbo",
+        # "gamma" : 0.15,
         "metadata": metadata
     }
 
