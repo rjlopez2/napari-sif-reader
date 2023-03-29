@@ -37,41 +37,6 @@ def napari_get_reader(path):
     # otherwise we return the *function* that can read ``path``.
     return reader_function
 
-def get_custome_metadata_func(info_sif_reader):
-    metadata_key_names = ['SifVersion',
-                                'ExperimentTime',
-                                'DetectorTemperature',
-                                'ExposureTime',
-                                'CycleTime',
-                                'AccumulatedCycleTime',
-                                'AccumulatedCycles',
-                                'StackCycleTime',
-                                'PixelReadoutTime',
-                                'GainDAC',
-                                'DetectorType',
-                                'DetectorDimensions',
-                                'OriginalFilename',
-                                'ShutterTime',
-                                'spectrograph',
-                                'SifCalbVersion',
-                                'Calibration_data',
-                                'FrameAxis',
-                                'DataType',
-                                'ImageAxis',
-                                'NumberOfFrames',
-                                'NumberOfSubImages',
-                                'TotalLength',
-                                'ImageLength',
-                                'xbin',
-                                'ybin']
-    metadata_dict_output = {}
-    
-    
-    for key in range(len(metadata_key_names)):
-        metadata_dict_output[metadata_key_names[key]] = info_sif_reader.get(metadata_key_names[key])
-        
-    return metadata_dict_output
-
 def reader_function(path):
     """Take a path or list of paths and return a list of LayerData tuples.
 
@@ -102,17 +67,15 @@ def reader_function(path):
     data, info = sif_parser.np_open(path)
     # reorder array so it's the same order dimention represented as in the matlab app
     data = np.flip(data, axis=(1))
-    metadata = get_custome_metadata_func(info)
+    # metadata = get_custome_metadata_func(info)
+    metadata = {key: val for key, val in info.items() if (not key.startswith("timestamp") and (not key.startswith("tile"))) }
 
     # skip first two frames to avoid peak artifact on first frame?
-    data = data[2:,...]
-
-    
-    #################### note: update this to only get usefulll 
-    ########## and not redudndant metadata info
-
-    # meta = dict(info)
-
+    # if stack contain more than 3 images will remove the first 2 because of artefact
+    if not metadata["NumberOfFrames"] is None and metadata["NumberOfFrames"] >= 3:
+        data = data[2:,...]
+ 
+  
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {
         "colormap" : "turbo",
